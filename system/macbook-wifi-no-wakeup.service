@@ -1,0 +1,16 @@
+# MacBookAir9,1 (T2): the Broadcom BCM4377 Wi-Fi card (ACPI ARPT, PCI 14e4:4488)
+# raises a spurious wake ~2s into every S3 suspend, so a closed lid loops
+# suspend/resume all night (bisected 2026-11-21). brcmfmac re-initializes the card
+# on every resume and re-enables its wake, so a boot-time udev rule only covers
+# the first sleep. This runs before every sleep and disables it again.
+# Cost: no Wake-on-WLAN. Lid, keyboard, power button and charger still wake it.
+[Unit]
+Description=Disable Broadcom Wi-Fi wake before sleep (spurious wake fix)
+Before=sleep.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'for d in /sys/bus/pci/devices/*; do [ "$(cat $d/vendor)" = 0x14e4 ] && [ "$(cat $d/device)" = 0x4488 ] && echo disabled > $d/power/wakeup; done; true'
+
+[Install]
+WantedBy=sleep.target

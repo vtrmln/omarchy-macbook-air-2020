@@ -1,0 +1,8 @@
+# Apple's Wi-Fi/Bluetooth firmware: keep it on your USB stick, never publish it.
+system/firmware.tar
+system/firmware.tar.sha256
+# Separate repo (github.com/vtrmln/omarchy-critters); setup.sh clones it here.
+fun/omarchy-critters/
+# Results of tools/wake-test.sh
+tools/run-*/
+tools/acpi/
